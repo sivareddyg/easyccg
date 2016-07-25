@@ -244,29 +244,21 @@ public class ParserAStar implements Parser
       return null;
     }
     
-    Stopwatch stopWatch = Stopwatch.createStarted();
-    
     List<List<SyntaxTreeNodeLeaf>> supertags;
     
     if (input.isAlreadyTagged()) {
       supertags = input.getInputSupertags();
     } else {
       try{
-        taggingTimeOnly.start();
         supertags = tagger.tag(input.getInputWords());
       } finally {
-        taggingTimeOnly.stop();
       }
     }
     
     try{
-      parsingTimeOnly.start();
       List<SyntaxTreeNode> parses = parseAstar(supertags);
       return parses;
     } finally {
-      parsingTimeOnly.stop();
-      stopWatch.stop();    
-      sentenceLengthToParseTimeInNanos.put(input.length(), stopWatch.elapsed(TimeUnit.NANOSECONDS));
     }
   }
 
